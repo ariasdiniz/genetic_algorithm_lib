@@ -7,12 +7,6 @@ static float random_number() {
   return __MIN + scale * (__MAX - __MIN);
 }
 
-/*
-  Create a pointer to an array of individuals. The number of individuals
-  is equal to the n_individuals provided. Don't forget to call
-  destroy_individuals on this array after usage to free the
-  used memory.
-*/
 Individual **generate_individuals(unsigned int n_individuals) {
   Individual **individuals = malloc(sizeof(Individual *) * n_individuals);
   for (int i = 0; i < n_individuals; i ++) {
@@ -34,20 +28,12 @@ Individual **generate_individuals(unsigned int n_individuals) {
   return individuals;
 }
 
-/*
-  Safely destroys an Individual**
-*/
 void destroy_individuals(Individual **individuals, unsigned int n_individuals) {
   for (int i = 0; i < n_individuals; i++) {
     free(individuals[i]);
   }
   free(individuals);
 }
-
-/*
-  These functions were declared to be used only inside this .c file.
-  Do not alter them to be used externally.
-*/
 
 static float mutation_prob() {
   return rand() / (float)RAND_MAX;
@@ -73,16 +59,6 @@ void reproduction(Individual *ind1, Individual *ind2, Individual *result, unsign
   }
 }
 
-/*
-  These functions are meant to be use outside this .c file and their
-  interfaces are declared in functions.h
-*/
-
-/*
-  This function get two high ranked individuals, take the mean of ther
-  weights and substitute in a low ranked individual, effectively
-  "killing" the low ranked individual and creating a new one.
-*/
 int reproduce(Individual **individual, unsigned int n_weights, unsigned int n_individuals) {
   if (individual == NULL) {
     return -1;
@@ -96,11 +72,6 @@ int reproduce(Individual **individual, unsigned int n_weights, unsigned int n_in
   return 0;
 }
 
-/*
-  This function interates over every weight of every individual
-  and slightly modify the weight if the randomized number is
-  smaller or equal than the mutation chance.
-*/
 int mutate(Individual **individual, unsigned int n_weights, unsigned int n_individuals) {
   if (individual == NULL || n_weights < 1) {
     return -1;
@@ -115,11 +86,6 @@ int mutate(Individual **individual, unsigned int n_weights, unsigned int n_indiv
   return 0;
 }
 
-
-/*
-  This function calculates the fitness of every individual.
-  To be implemented
-*/
 int fit(Individual **individual) {
   // Implement me
   return 0;

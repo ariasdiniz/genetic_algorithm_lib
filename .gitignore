@@ -1,3 +1,6 @@
+CMakeLists.txt
+main.c
+
 # Ignore compiled binaries
 *.exe
 *.out

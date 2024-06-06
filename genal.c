@@ -89,12 +89,12 @@ int reproduce(Individuals *individuals) {
   if (individuals == NULL) {
     return -1;
   }
-  Individual *individual_array = individuals->individual_array;
+  Individual **individual_array = individuals->individual_array;
   unsigned int array_size = individuals->n_individuals;
   unsigned int individuals_to_reproduce = floor(array_size * individuals->reproduction_rate);
-  qsort(individual_array, array_size, sizeof(Individual), compare_individuals);
+  qsort(individual_array, array_size, sizeof(Individual*), compare_individuals);
   for (int i = 0; i < individuals_to_reproduce; i ++) {
-    reproduction(&individual_array[i*2], &individual_array[(i*2)+1], &individual_array[array_size-1-i], individuals->number_weights);
+    reproduction(individual_array[i*2], individual_array[(i*2)+1], individual_array[array_size-1-i], individuals->number_weights);
   }  
   return 0;
 }
@@ -113,7 +113,10 @@ int mutate(Individuals *individuals) {
   return 0;
 }
 
-int fit(Individuals *individuals) {
-  // Implement me
+int fit(Individuals *individuals, fitfunc func) {
+  if (individuals == NULL) {
+    return -1;
+  }
+  func(individuals);
   return 0;
 }

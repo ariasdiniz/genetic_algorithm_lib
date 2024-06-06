@@ -20,6 +20,8 @@ typedef struct Individuals {
   double number_weights, min, max;
 } Individuals;
 
+typedef void *fitfunc(Individuals *individuals);
+
 /*
   Create a pointer to an array of individuals. The number of individuals
   is equal to the n_individuals provided. Don't forget to call
@@ -59,6 +61,6 @@ int mutate(Individuals *individuals);
   This function calculates the fitness of every individual.
   To be implemented
 */
-int fit(Individuals *individuals);
+int fit(Individuals *individuals, fitfunc func);
 
 #endif // _ARIA_GENETIC_ALGORITHM_FUNCTIONS_H

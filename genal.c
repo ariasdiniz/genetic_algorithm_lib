@@ -16,11 +16,11 @@ static void destroy_individual_array(Individual **individuals, unsigned int n_in
 }
 
 static int compare_individuals(const void* a, const void* b) {
-    Individual *arg1 = (Individual *)a;
-    Individual *arg2 = (Individual *)b;
+    const Individual *arg1 = *(const Individual **)a;
+    const Individual *arg2 = *(const Individual **)b;
 
-    if (arg1->fitness < arg2->fitness) return -1;
-    if (arg1->fitness > arg2->fitness) return 1;
+    if (arg1->fitness > arg2->fitness) return -1;
+    if (arg1->fitness < arg2->fitness) return 1;
     return 0;
 }
 
@@ -97,7 +97,7 @@ int reproduce(Individuals *individuals) {
   qsort(individual_array, array_size, sizeof(Individual*), compare_individuals);
   for (int i = 0; i < individuals_to_reproduce; i ++) {
     reproduction(individual_array[i*2], individual_array[(i*2)+1], individual_array[array_size-1-i], individuals->number_weights);
-  }  
+  }
   return 0;
 }
 

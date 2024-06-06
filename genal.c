@@ -2,49 +2,19 @@
 #include <math.h>
 #include "genal.h"
 
-static float random_number() {
+static float random_number(double min, double max) {
   float scale = rand() / (float)RAND_MAX;
-  return __MIN + scale * (__MAX - __MIN);
+  return min + scale * (max - min);
 }
 
-Individual **generate_individuals(unsigned int n_individuals) {
-  Individual **individuals = malloc(sizeof(Individual *) * n_individuals);
-  for (int i = 0; i < n_individuals; i ++) {
-    individuals[i] = malloc(sizeof(Individual));
-    if (individuals[i] == NULL) {
-      for (int j = 0; j < i; j++) {
-        free(individuals[j]);
-      }
-      free(individuals);
-      return NULL;
-    }
-  }
-  for (int i = 0; i < n_individuals; i++) {
-    for (int j = 0; j < __NUMBER_OF_WEIGHTS; j++) {
-      individuals[i]->weights[j] = random_number();
-    }
-    individuals[i]->fitness = 0.0;
-  }
-  return individuals;
-}
-
-void destroy_individuals(Individual **individuals, unsigned int n_individuals) {
+static void destroy_individual_array(Individual **individuals, unsigned int n_individuals) {
   for (int i = 0; i < n_individuals; i++) {
     free(individuals[i]);
   }
   free(individuals);
 }
 
-static float mutation_prob() {
-  return rand() / (float)RAND_MAX;
-}
-
-static float mutation() {
-  float scale = mutation_prob() * __MUTATION_RANGE;
-  return (-__MUTATION_RANGE / 2.0) + scale;
-}
-
-int compare_individuals(const void* a, const void* b) {
+static int compare_individuals(const void* a, const void* b) {
     Individual *arg1 = (Individual *)a;
     Individual *arg2 = (Individual *)b;
 
@@ -53,40 +23,97 @@ int compare_individuals(const void* a, const void* b) {
     return 0;
 }
 
-void reproduction(Individual *ind1, Individual *ind2, Individual *result, unsigned int n_weights) {
+static void reproduction(Individual *ind1, Individual *ind2, Individual *result, unsigned int n_weights) {
   for (int i = 0; i < n_weights; i++) {
     result->weights[i] = (ind1->weights[i] + ind2->weights[i]) / 2.0;
   }
 }
 
-int reproduce(Individual **individual, unsigned int n_weights, unsigned int n_individuals) {
-  if (individual == NULL) {
+static float mutation_prob() {
+  return rand() / (float)RAND_MAX;
+}
+
+static float mutation(double mutation_range) {
+  float scale = mutation_prob() * mutation_range;
+  return (-mutation_range / 2.0) + scale;
+}
+
+Individuals **generate_individuals(
+  unsigned int n_individuals,
+  double mutation_prob,
+  double mutation_range,
+  double reproduction_rate,
+  double number_weights,
+  double min,
+  double max
+) {
+  Individual **individual_array = malloc(sizeof(Individual *) * n_individuals);
+  for (int i = 0; i < n_individuals; i ++) {
+    individual_array[i] = malloc(sizeof(Individual));
+    if (individual_array[i] == NULL) {
+      for (int j = 0; j < i; j++) {
+        free(individual_array[j]);
+      }
+      free(individual_array);
+      return NULL;
+    }
+  }
+  Individuals *individuals = malloc(sizeof(Individuals));
+  if (individuals == NULL) {
+    destroy_individual_array(individual_array, n_individuals);
+    return NULL;
+  }
+  individuals->individual_array = individual_array;
+  individuals->n_individuals = n_individuals;
+  individuals->max = max;
+  individuals->min = min;
+  individuals->mutation_prob = mutation_prob;
+  individuals->mutation_range = mutation_range;
+  individuals->number_weights = number_weights;
+  individuals->reproduction_rate = reproduction_rate;
+  for (int i = 0; i < n_individuals; i++) {
+    for (int j = 0; j < number_weights; j++) {
+      individual_array[i]->weights[j] = random_number(min, max);
+    }
+    individual_array[i]->fitness = 0.0;
+  }
+  return individuals;
+}
+
+void destroy_individuals(Individuals *individuals) {
+  destroy_individual_array(individuals, individuals->n_individuals);
+  free(individuals);
+}
+
+int reproduce(Individuals *individuals) {
+  if (individuals == NULL) {
     return -1;
   }
-  unsigned int array_size = (sizeof(individual) / sizeof(individual[0]));
-  unsigned int individuals_to_reproduce = floor(array_size * __REPRODUCTION_RATE);
-  qsort(individual, array_size, sizeof(Individual), compare_individuals);
+  Individual **individual_array = individuals->individual_array;
+  unsigned int array_size = individuals->n_individuals;
+  unsigned int individuals_to_reproduce = floor(array_size * individuals->reproduction_rate);
+  qsort(individual_array, array_size, sizeof(Individual), compare_individuals);
   for (int i = 0; i < floor(individuals_to_reproduce / 2); i ++)  {
-    reproduction(individual[i*2], individual[(i*2)+1], individual[n_individuals-1-i], n_weights);
+    reproduction(individual_array[i*2], individual_array[(i*2)+1], individual_array[individuals->n_individuals-1-i], individuals->number_weights);
   }  
   return 0;
 }
 
-int mutate(Individual **individual, unsigned int n_weights, unsigned int n_individuals) {
-  if (individual == NULL || n_weights < 1) {
+int mutate(Individuals *individuals) {
+  if (individuals == NULL || individuals->number_weights < 1) {
     return -1;
   }
-  for (unsigned int i = 0; i < n_individuals; i++) {
-    for (unsigned int j = 0; j < n_weights; j++) {
-      if (mutation_prob() <= __MUTATION_PROBABILITY) {
-        individual[i]->weights[j] += mutation();
+  for (unsigned int i = 0; i < individuals->n_individuals; i++) {
+    for (unsigned int j = 0; j < individuals->number_weights; j++) {
+      if (mutation_prob() <= individuals->mutation_prob) {
+        individuals->individual_array[i]->weights[j] += mutation(individuals->mutation_range);
       }
     }
   }
   return 0;
 }
 
-int fit(Individual **individual) {
+int fit(Individuals *individuals) {
   // Implement me
   return 0;
 }

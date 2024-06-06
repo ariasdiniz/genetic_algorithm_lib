@@ -73,8 +73,8 @@ Individuals *generate_individuals(
   individuals->number_weights = number_weights;
   individuals->reproduction_rate = reproduction_rate;
   for (int i = 0; i < n_individuals; i++) {
+    individual_array[i]->weights = malloc(sizeof(float) * number_weights);
     for (int j = 0; j < number_weights; j++) {
-      individual_array[i]->weights = malloc(sizeof(float) * number_weights);
       individual_array[i]->weights[j] = random_number(min, max);
     }
     individual_array[i]->fitness = 0.0;

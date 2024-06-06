@@ -38,7 +38,7 @@ static float mutation(double mutation_range) {
   return (-mutation_range / 2.0) + scale;
 }
 
-Individuals **generate_individuals(
+Individuals *generate_individuals(
   unsigned int n_individuals,
   double mutation_prob,
   double mutation_range,
@@ -81,7 +81,7 @@ Individuals **generate_individuals(
 }
 
 void destroy_individuals(Individuals *individuals) {
-  destroy_individual_array(individuals, individuals->n_individuals);
+  destroy_individual_array(individuals->individual_array, individuals->n_individuals);
   free(individuals);
 }
 
@@ -89,12 +89,12 @@ int reproduce(Individuals *individuals) {
   if (individuals == NULL) {
     return -1;
   }
-  Individual **individual_array = individuals->individual_array;
+  Individual *individual_array = individuals->individual_array;
   unsigned int array_size = individuals->n_individuals;
   unsigned int individuals_to_reproduce = floor(array_size * individuals->reproduction_rate);
   qsort(individual_array, array_size, sizeof(Individual), compare_individuals);
-  for (int i = 0; i < floor(individuals_to_reproduce / 2); i ++)  {
-    reproduction(individual_array[i*2], individual_array[(i*2)+1], individual_array[individuals->n_individuals-1-i], individuals->number_weights);
+  for (int i = 0; i < individuals_to_reproduce; i ++) {
+    reproduction(&individual_array[i*2], &individual_array[(i*2)+1], &individual_array[array_size-1-i], individuals->number_weights);
   }  
   return 0;
 }

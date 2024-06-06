@@ -26,7 +26,7 @@ typedef struct Individuals {
   destroy_individuals on this array after usage to free the
   used memory.
 */
-Individuals **generate_individuals(
+Individuals *generate_individuals(
   unsigned int n_individuals,
   double mutation_prob,
   double mutation_range,

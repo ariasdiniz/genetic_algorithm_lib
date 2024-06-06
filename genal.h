@@ -2,7 +2,7 @@
 #define _ARIA_GENETIC_ALGORITHM_FUNCTIONS_H
 
 typedef struct Individual {
-  float weights[__NUMBER_OF_WEIGHTS];
+  float *weights;
   double fitness;
 } Individual;
 

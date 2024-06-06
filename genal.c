@@ -9,6 +9,7 @@ static float random_number(double min, double max) {
 
 static void destroy_individual_array(Individual **individuals, unsigned int n_individuals) {
   for (int i = 0; i < n_individuals; i++) {
+    free(individuals[i]->weights);
     free(individuals[i]);
   }
   free(individuals);
@@ -73,6 +74,7 @@ Individuals *generate_individuals(
   individuals->reproduction_rate = reproduction_rate;
   for (int i = 0; i < n_individuals; i++) {
     for (int j = 0; j < number_weights; j++) {
+      individual_array[i]->weights = malloc(sizeof(float) * number_weights);
       individual_array[i]->weights[j] = random_number(min, max);
     }
     individual_array[i]->fitness = 0.0;

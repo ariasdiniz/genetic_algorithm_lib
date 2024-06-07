@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "genal.h"
 
@@ -72,6 +73,14 @@ Individuals *generate_individuals(
   double min,
   double max
 ) {
+  if (mutation_prob > 1 || mutation_prob < 0) {
+    fprintf(stderr, "mutation_prob should be a number between 0 and 1.\n");
+    exit(EXIT_FAILURE);
+  }
+  if (reproduction_rate > 1 || reproduction_rate < 0) {
+    fprintf(stderr, "reproduction_rate should be a number between 0 and 1.\n");
+    exit(EXIT_FAILURE);
+  }
   Individual **individual_array = malloc(sizeof(Individual *) * n_individuals);
   for (int i = 0; i < n_individuals; i ++) {
     individual_array[i] = malloc(sizeof(Individual));

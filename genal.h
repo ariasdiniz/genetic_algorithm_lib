@@ -56,14 +56,15 @@ Individuals *generate_individuals(
 );
 
 /*
-  Safely destroys an Individual**
+  Safely destroys an Individuals*
 */
 void destroy_individuals(Individuals *individuals);
 
 /*
   This function get two high ranked individuals, take the mean of ther
   weights and substitute in a low ranked individual, effectively
-  "killing" the low ranked individual and creating a new one.
+  "killing" the low ranked individual and creating a new one. This is
+  done for the best (n_individuals * reproduction_rate) individuals.
 */
 int reproduce(Individuals *individuals);
 
@@ -76,7 +77,6 @@ int mutate(Individuals *individuals);
 
 /*
   This function calculates the fitness of every individual.
-  To be implemented
 */
 int fit(Individuals *individuals, fitfunc func);
 

@@ -15,7 +15,7 @@
 
   The problem is to determine the number of unique products
   this basket can carry. The response is 2 items, one that wights 3 kg
-  and another that weights 5 kg.
+  and another that weights 5 kg. Or it could be only the item with 8 kg.
 
   For this problem, the best fitted individuals of the algorithm
   have to have, after training, weights like:

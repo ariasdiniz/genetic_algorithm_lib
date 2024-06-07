@@ -61,10 +61,10 @@ Individuals *generate_individuals(
 void destroy_individuals(Individuals *individuals);
 
 /*
-  This function get two high ranked individuals, take the mean of ther
-  weights and substitute in a low ranked individual, effectively
-  "killing" the low ranked individual and creating a new one. This is
-  done for the best (n_individuals * reproduction_rate) individuals.
+  This function get two high ranked (by fitness) individuals, take the 
+  mean of ther weights and substitute in a low ranked individual,
+  effectively "killing" the low ranked individual and creating a new one.
+  This is done for the best (n_individuals * reproduction_rate) individuals.
 */
 int reproduce(Individuals *individuals);
 

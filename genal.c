@@ -77,8 +77,8 @@ Individuals *generate_individuals(
     fprintf(stderr, "mutation_prob should be a number between 0 and 1.\n");
     exit(EXIT_FAILURE);
   }
-  if (reproduction_rate > 1 || reproduction_rate < 0) {
-    fprintf(stderr, "reproduction_rate should be a number between 0 and 1.\n");
+  if (reproduction_rate > 0.5 || reproduction_rate < 0) {
+    fprintf(stderr, "reproduction_rate should be a number between 0 and 0.5.\n");
     exit(EXIT_FAILURE);
   }
   Individual **individual_array = malloc(sizeof(Individual *) * n_individuals);
